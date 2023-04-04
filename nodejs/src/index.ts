@@ -1,86 +1,12 @@
 
 import * as dotenv from 'dotenv';
+import {SdkFunction} from './sdk_function';
 dotenv.config()
-import axios from 'axios';
 
 
 const failed = -1;
 const short_task = 0;
 const worker_node = 1;
-
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY
-const SUPABASE_URL = process.env.SUPABASE_URL
-const SUPABASE_TOKEN = process.env.SUPABASE_TOKEN
-const API_KEY = process.env.API_KEY
-
-interface Filter {
-	worker_id: number
-	monitor_name: string
-	soudcard_name: string
-}
-console.log(SUPABASE_ANON_KEY);
-const url = "http://example.com/movies.json"
-
-interface WorkerProfile {
-	name: string
-}
-class SdkFunction {
-	data: WorkerProfile[]
-	constructor() {
-		this.data = []
-		this.fetchWorker()
-	}
-
-	async fetchWorker(): Promise<WorkerProfile[]> {
-
-		const body = { only_active: false }
-
-		const res = await axios('https://jsonplaceholder.typicode.com/users', {
-			method: "GET",
-			//body: JSON.stringify(body),
-			//headers: {
-			//	'api_key': API_KEY,
-			//	'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-			//}
-		})
-		const dataParse = await res.data
-		this.data = dataParse as WorkerProfile[]
-		return this.data
-	}
-
-	async CreateSession(filter: Filter): Promise<WorkerProfile> {
-
-		const res = await axios({
-			url,
-			method: "POST",
-			data: filter,
-			headers: {
-				'api_key': API_KEY,
-				'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-			}
-		})
-		const dataParse = await res.data()
-		return dataParse as WorkerProfile
-	}
-
-	async DeactivateSession(sessionId: number) {
-		const body = { worker_session_id: sessionId }
-
-		const res = await axios({
-			url,
-			method: "POST",
-			data: body,
-			headers: {
-				'api_key': API_KEY,
-				'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-			}
-		})
-		const dataParse = await res.data()
-		return dataParse
-
-	}
-}
-
 
 const listCommand = process.argv
 
