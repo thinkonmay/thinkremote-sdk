@@ -1,6 +1,5 @@
 import requests, ujson
-from utility import utility
-
+import os 
 ApiKey = {
     "key": str,
     "project": str
@@ -42,24 +41,31 @@ Secret = {
     }
 }
 
-mySecret = Secret()
+mySecret = Secret
+PROJECT = os.getenv("PROJECT")
+API_KEY = os.getenv("API_KEY")
 
+class SdkFunction:
 
-class WebRTCController:
+    def __init__(self):
+        mySecret = None
 
-    def __init__(self, public_ip="", private_ip=""):
-        mySecret = Secret
-        Addresses = Address(public_ip, private_ip)
-        url = "https://" + utility.get_app_config()["webrtc_service"]["PROJECT"] + ".functions.supabase.co/constant"
+    def FetchSecret():
+        if mySecret != None:
+            return mySecret
+        
+        mySecret = Secret()
+
+        url = "https://" + PROJECT + ".functions.supabase.co/constant"
+
         response = requests.post(url=url, 
             timeout=3, 
             verify=False, 
             headers={'Content-type': 'application/json'}).content.decode("utf-8")
+        
         response = ujson.loads(response)
-       
-
         mySecret = response
-
+        print("updated secret")
 
     def FetchWorker(cred: ApiKey):
         payload = dict(only_active = False)
@@ -72,7 +78,7 @@ class WebRTCController:
                             data=payload,
                             timeout=3, 
                             verify=False, 
-                            headers={"api_key": cred["key"], "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
+                            headers={"api_key": API_KEY, "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
             response = ujson.loads(response)
         except:
             pass
@@ -83,7 +89,7 @@ class WebRTCController:
         "sound_name": str
     }
 
-    def CreateSession(filter: Filter, cred: ApiKey):
+    def CreateSession(filter: Filter):
         payload = dict(filter)
         url = mySecret['edge_functions']['worker_session_create']
         try:
@@ -91,7 +97,7 @@ class WebRTCController:
                             data=payload,
                             timeout=3, 
                             verify=False, 
-                            headers={"api_key": cred["key"], "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
+                            headers={"api_key": API_KEY, "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
         except:
             pass
         return str
@@ -106,7 +112,7 @@ class WebRTCController:
                                     data=payload,
                                     timeout=3, 
                                     verify=False, 
-                                    headers={"api_key": cred["key"], "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
+                                    headers={"api_key": API_KEY, "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
 
         except:
             pass
