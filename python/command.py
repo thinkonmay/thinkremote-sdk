@@ -31,11 +31,14 @@ def main():
 
                 sdk.CreateSession(id, soundcard, monitor)
             elif item == "deactivate-session":
+                
                 id = -1
                 if idx + 1 < len(listCommand) and idx + 2 < len(listCommand): 
                     if  listCommand[idx + 1] == '--session-id':
                         id = int(listCommand[idx + 2])
-                    print(id)
+                print(id)
+                if id != -1:
+                    sdk.DeactiveSession(id)
     elif listCommand[1] == "--help":
         printHelp()
 

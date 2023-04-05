@@ -92,7 +92,7 @@ class SdkFunction:
             data=payload,
             timeout=3, 
             verify=True, 
-            headers={"api_key": API_KEY, "Authorization": "Bearer" + self.mySecret["secret"]["anon"] })
+            headers={"api_key": API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"] })
         if (response.status_code != 200):
             return "response "+ response.statusText + " : " + response.data
         response = json.loads(response.text)
@@ -101,15 +101,17 @@ class SdkFunction:
     
 
     def DeactiveSession(self, session_id: str):
-        self.FetchSecret(self)
+        self.FetchSecret()
         url = self.mySecret["edge_functions"]["worker_session_deactivate"]
+        print(url)
         response = requests.post(url=url, 
             data=json.dumps({ "worker_session_id": session_id }),
             timeout=3, 
             verify=True, 
-            headers={"api_key": API_KEY, "Authorization": "Bearer" + self.mySecret["secret"]["anon"] })
+            headers={"api_key": API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"] })
 
+        print(response.text)
         if (response.status_code != 200):
-            return "response "+ response.statusText + " : " + response.data
+            return print("response " + str(response.status_code) + " : " + response.text)
         response = json.loads(response.text)
         return response
