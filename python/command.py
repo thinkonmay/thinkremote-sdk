@@ -1,5 +1,6 @@
 import json
 import sys
+import yaml
 
 from sdk import SdkFunction
 listCommand = sys.argv
@@ -7,12 +8,15 @@ listCommand = sys.argv
 
 def main():
 
-    sdk = SdkFunction()
+
+    if len(listCommand) < 1 or len(listCommand) < 2:
+        return
     if listCommand[1] == "vendor":
+        sdk = SdkFunction()
         for idx, item in enumerate(listCommand):
             if item == "list-workers": 
-                data =  sdk.FetchWorker()
-                print(json.dumps(data, separators=(',',':')))
+                data = sdk.FetchWorker()
+                print(yaml.dump(data))
             elif item == "create-session":
                 id = -1
                 soundcard = "Default Audio Render Device"
