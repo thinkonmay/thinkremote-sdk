@@ -18,27 +18,27 @@ Address = {
 }
 
 Secret = {
-    "edge_functions" : {
-        "user_keygen": str,
-        "proxy_register": str,
-        "session_authenticate": str,
-        "signaling_authenticate": str,
-        "turn_register": str,
-        "worker_profile_fetch": str,
-        "worker_register": str,
-        "worker_session_create": str,
-        "worker_session_deactivate": str,
+    'edge_functions' : {
+        'user_keygen': '',
+        'proxy_register': '',
+        'session_authenticate': '',
+        'signaling_authenticate': '',
+        'turn_register': '',
+        'worker_profile_fetch': '',
+        'worker_register': '',
+        'worker_session_create': '',
+        'worker_session_deactivate': '',
     },
-    "secret": {
-        "anon": str,
-        "url": str
+    'secret': {
+        'anon': '',
+        'url': ''
     },
-    "google": {
-        "client_id": str
+    'google': {
+        'client_id': ''
     },
-    "conductor": {
-        "host": str,
-        "grpc_port": int
+    'conductor': {
+        'host': '',
+        'grpc_port': ''
     }
 }
 
@@ -50,7 +50,6 @@ class SdkFunction:
     def __init__(self):
         self.mySecret = None
         
-    @staticmethod
     def FetchSecret(self):
         if self.mySecret != None:
             return self.mySecret
@@ -58,20 +57,17 @@ class SdkFunction:
         self.mySecret = Secret
 
         url = "https://" + PROJECT + ".functions.supabase.co/constant"
-
         response = requests.post(url=url, 
             timeout=3, 
             verify=True,
             json=Secret
             )
-        
+         
         self.mySecret = json.loads(response.text)
         print("updated secret")
 
     def FetchWorker(self):
-        self.FetchSecret(self)
-        payload = { "only_active": False }
-
+        self.FetchSecret()
         url = self.mySecret["edge_functions"]["worker_profile_fetch"]
         response = requests.post(url=url, 
                         data=json.dumps({ "only_active": False }),
@@ -92,29 +88,28 @@ class SdkFunction:
     def CreateSession(self, filter: Filter):
         payload = dict(filter)
         url = self.mySecret['edge_functions']['worker_session_create']
-        try:
-            response = requests.post(url=url, 
-                            data=payload,
-                            timeout=3, 
-                            verify=True, 
-                            headers={"api_key": API_KEY, "Authorization": "Bearer" + self.mySecret["secret"]["anon"] }).content.decode("utf-8")
-        except:
-            pass
-        return str
+        response = requests.post(url=url, 
+            data=payload,
+            timeout=3, 
+            verify=True, 
+            headers={"api_key": API_KEY, "Authorization": "Bearer" + self.mySecret["secret"]["anon"] })
+        if (response.status_code != 200):
+            return "response "+ response.statusText + " : " + response.data
+        response = json.loads(response.text)
+        return response
 
     
 
-    def DeactiveSession(self, session_id: str, cred: ApiKey):
-        payload = dict(worker_session_id=session_id)
-        url = self.mySecret['edge_functions']['worker_session_deactivate']
-        try:
-            response = requests.post(url=url, 
-                                    data=payload,
-                                    timeout=3, 
-                                    verify=False, 
-                                    headers={"api_key": API_KEY, "Authorization": "Bearer" + self.mySecret["secret"]["url"] }).content.decode("utf-8")
+    def DeactiveSession(self, session_id: str):
+        self.FetchSecret(self)
+        url = self.mySecret["edge_functions"]["worker_session_deactivate"]
+        response = requests.post(url=url, 
+            data=json.dumps({ "worker_session_id": session_id }),
+            timeout=3, 
+            verify=True, 
+            headers={"api_key": API_KEY, "Authorization": "Bearer" + self.mySecret["secret"]["anon"] })
 
-        except:
-            pass
-
-        return True
+        if (response.status_code != 200):
+            return "response "+ response.statusText + " : " + response.data
+        response = json.loads(response.text)
+        return response
