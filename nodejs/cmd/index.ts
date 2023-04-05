@@ -1,6 +1,6 @@
 
 import * as dotenv from 'dotenv';
-import {SdkFunction} from './sdk_function';
+import {SdkFunction} from '../src/sdk';
 dotenv.config()
 
 
@@ -14,53 +14,58 @@ listCommand.forEach(async (val, index) => {
 	console.log(index + ': ' + val);
 	const sdk = new SdkFunction()
 	switch (val) {
-		case 'vendor': {
-			for (let i = index + 1; i <= listCommand.length; i++) {
-				switch (listCommand[i]) {
-					case 'list-workers': {
-						const data = await sdk.fetchWorker()
-					}
-					case 'create-session': {
-						let id = -1
-						let soundcard = "Default Audio Render Device"
-						let monitor = "Generic PnP Monitor"
-						switch (listCommand[i + 1]) {
-							case '--worker-id': {
-								id = +listCommand[i + 2]
-								console.log(id);
-							}
-							case '--monitor': {
-								monitor = listCommand[i + 2]
-							}
-							case '--soundcard': {
-								soundcard = listCommand[i + 2]
-							}
-
-						}
-
-						await sdk.CreateSession({
-							worker_id: id,
-							soudcard_name: soundcard,
-							monitor_name: monitor,
-						})
-
-					}
-					case 'deactivate-session': {
-						let id = -1
-						if (listCommand[i + 1] === '--session-id') {
-							id = +listCommand[i + 2]
-						}
-						console.log(id);
-					}
-					default:
-						break;
+	case 'vendor': {
+		for (let i = index + 1; i <= listCommand.length; i++) {
+			switch (listCommand[i]) {
+				case 'list-workers': {
+					const data = await sdk.fetchWorker()
+					console.log(JSON.stringify(data))
 				}
+				break;
+				case 'create-session': {
+					let id = -1
+					let soundcard = "Default Audio Render Device"
+					let monitor = "Generic PnP Monitor"
+					switch (listCommand[i + 1]) {
+						case '--worker-id': {
+							id = +listCommand[i + 2]
+							console.log(id);
+						}
+						case '--monitor': {
+							monitor = listCommand[i + 2]
+						}
+						case '--soundcard': {
+							soundcard = listCommand[i + 2]
+						}
+
+					}
+
+					await sdk.CreateSession({
+						worker_id: id,
+						soudcard_name: soundcard,
+						monitor_name: monitor,
+					})
+
+				}
+				break;
+				case 'deactivate-session': {
+					let id = -1
+					if (listCommand[i + 1] === '--session-id') {
+						id = +listCommand[i + 2]
+					}
+					console.log(id);
+				}
+				break;
+				default:
+					break;
 			}
 		}
-		case '--help': {
-			printHelp()
-		}
-
+	}
+	break;
+	case '--help': {
+		printHelp()
+	}
+	break;
 	}
 });
 
