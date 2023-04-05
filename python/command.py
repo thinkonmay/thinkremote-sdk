@@ -22,21 +22,22 @@ def main():
                 soundcard = "Default Audio Render Device"
                 monitor = "Generic PnP Monitor"
                 if (listCommand[idx + 1] == "--worker-id"):
-                    id = +listCommand[idx + 2]
-                    print(id)
+                    id = listCommand[idx + 2]
                 elif listCommand[idx+1] == "--monitor":
                     monitor = listCommand[idx + 2]
                 elif listCommand[idx+1] == "--soundcard":
                     soundcard = listCommand[idx + 2]
 
-                sdk.CreateSession(id, soundcard, monitor)
+                resp = sdk.CreateSession({ "worker_id" : id,
+                                  "sound_name" : soundcard, 
+                                  "monitor_name" : monitor})
+                print(yaml.dump(resp))
             elif item == "deactivate-session":
                 
                 id = -1
                 if idx + 1 < len(listCommand) and idx + 2 < len(listCommand): 
                     if  listCommand[idx + 1] == '--session-id':
                         id = int(listCommand[idx + 2])
-                print(id)
                 if id != -1:
                     sdk.DeactiveSession(id)
     elif listCommand[1] == "--help":

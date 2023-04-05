@@ -42,40 +42,42 @@ Secret = {
     }
 }
 
-PROJECT = os.getenv("PROJECT")
-API_KEY = os.getenv("API_KEY")
 
 class SdkFunction:
-    
     def __init__(self):
         self.mySecret = None
+        self.PROJECT = os.getenv("PROJECT")
+        self.API_KEY = os.getenv("API_KEY")
         
     def FetchSecret(self):
         if self.mySecret != None:
             return self.mySecret
-        
-        self.mySecret = Secret
 
-        url = "https://" + PROJECT + ".functions.supabase.co/constant"
+        if self.PROJECT == "" or self.PROJECT == None:
+            self.PROJECT = "avmvymkexjarplbxwlnj"
+        
+        url = "https://" +self.PROJECT + ".functions.supabase.co/constant"
         response = requests.post(url=url, 
-            timeout=3, 
-            verify=True,
-            json=Secret
-            )
+                                timeout=3, 
+                                verify=True,
+                                json=Secret)
          
         self.mySecret = json.loads(response.text)
         print("updated secret")
 
     def FetchWorker(self):
         self.FetchSecret()
+
         url = self.mySecret["edge_functions"]["worker_profile_fetch"]
         response = requests.post(url=url, 
                         data=json.dumps({ "only_active": False }),
                         timeout=3, 
                         verify=True, 
-                        headers={"api_key": API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"]})
+                        headers={"api_key":self.API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"]})
+
         if (response.status_code != 200):
-            return "response "+ response.statusText + " : " + response.data
+            return "failed : " + response.content.decode()
+
         response = json.loads(response.text)
         return response
 
@@ -86,15 +88,18 @@ class SdkFunction:
     }
 
     def CreateSession(self, filter: Filter):
-        payload = dict(filter)
+        self.FetchSecret()
+
         url = self.mySecret['edge_functions']['worker_session_create']
         response = requests.post(url=url, 
-            data=payload,
+            data=json.dumps(filter),
             timeout=3, 
             verify=True, 
-            headers={"api_key": API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"] })
+            headers={"api_key":self.API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"] })
+
         if (response.status_code != 200):
-            return "response "+ response.statusText + " : " + response.data
+            return "failed : " + response.content.decode()
+
         response = json.loads(response.text)
         return response
 
@@ -102,16 +107,16 @@ class SdkFunction:
 
     def DeactiveSession(self, session_id: str):
         self.FetchSecret()
+
         url = self.mySecret["edge_functions"]["worker_session_deactivate"]
-        print(url)
         response = requests.post(url=url, 
             data=json.dumps({ "worker_session_id": session_id }),
             timeout=3, 
             verify=True, 
-            headers={"api_key": API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"] })
+            headers={"api_key":self.API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"] })
 
-        print(response.text)
         if (response.status_code != 200):
-            return print("response " + str(response.status_code) + " : " + response.text)
+            return "failed : " + response.content.decode()
+
         response = json.loads(response.text)
         return response
