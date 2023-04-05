@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { FetchResponse, Filter, Secret, WorkerProfile } from './model';
 
-const PROJECT = process.env.PROJECT
+const PROJECT = process.env.PROJECT ?? "avmvymkexjarplbxwlnj"
 const API_KEY = process.env.API_KEY
 
 
@@ -23,7 +23,7 @@ export class SdkFunction {
 		})
 
 		this.secret = res.data 
-		console.log('updated secret')
+		console.log(`updated secret for project ${PROJECT}`)
 	}
 
 	async fetchWorker(): Promise<FetchResponse | Error> {
