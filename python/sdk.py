@@ -1,4 +1,5 @@
-import requests, ujson
+import json
+import requests
 import os 
 ApiKey = {
     "key": str,
@@ -41,47 +42,46 @@ Secret = {
     }
 }
 
-mySecret = Secret
 PROJECT = os.getenv("PROJECT")
 API_KEY = os.getenv("API_KEY")
 
 class SdkFunction:
-
+    
     def __init__(self):
-        mySecret = None
-
-    def FetchSecret():
-        if mySecret != None:
-            return mySecret
+        self.mySecret = None
         
-        mySecret = Secret()
+    @staticmethod
+    def FetchSecret(self):
+        if self.mySecret != None:
+            return self.mySecret
+        
+        self.mySecret = Secret
 
         url = "https://" + PROJECT + ".functions.supabase.co/constant"
 
         response = requests.post(url=url, 
             timeout=3, 
-            verify=False, 
-            headers={'Content-type': 'application/json'}).content.decode("utf-8")
+            verify=True,
+            json=Secret
+            )
         
-        response = ujson.loads(response)
-        mySecret = response
+        self.mySecret = json.loads(response.text)
         print("updated secret")
 
-    def FetchWorker(cred: ApiKey):
-        payload = dict(only_active = False)
+    def FetchWorker(self):
+        self.FetchSecret(self)
+        payload = { "only_active": False }
 
-        url = mySecret['edge_functions']['worker_profile_fetch']
-
-
-        try:
-            response = requests.post(url=url, 
-                            data=payload,
-                            timeout=3, 
-                            verify=False, 
-                            headers={"api_key": API_KEY, "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
-            response = ujson.loads(response)
-        except:
-            pass
+        url = self.mySecret["edge_functions"]["worker_profile_fetch"]
+        response = requests.post(url=url, 
+                        data=json.dumps({ "only_active": False }),
+                        timeout=3, 
+                        verify=True, 
+                        headers={"api_key": API_KEY, "Authorization": "Bearer " + self.mySecret["secret"]["anon"]})
+        if (response.status_code != 200):
+            return "response "+ response.statusText + " : " + response.data
+        response = json.loads(response.text)
+        return response
 
     Filter = {
         "worker_id": int,
@@ -89,15 +89,15 @@ class SdkFunction:
         "sound_name": str
     }
 
-    def CreateSession(filter: Filter):
+    def CreateSession(self, filter: Filter):
         payload = dict(filter)
-        url = mySecret['edge_functions']['worker_session_create']
+        url = self.mySecret['edge_functions']['worker_session_create']
         try:
             response = requests.post(url=url, 
                             data=payload,
                             timeout=3, 
-                            verify=False, 
-                            headers={"api_key": API_KEY, "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
+                            verify=True, 
+                            headers={"api_key": API_KEY, "Authorization": "Bearer" + self.mySecret["secret"]["anon"] }).content.decode("utf-8")
         except:
             pass
         return str
@@ -106,13 +106,13 @@ class SdkFunction:
 
     def DeactiveSession(self, session_id: str, cred: ApiKey):
         payload = dict(worker_session_id=session_id)
-        url = mySecret['edge_functions']['worker_session_deactivate']
+        url = self.mySecret['edge_functions']['worker_session_deactivate']
         try:
             response = requests.post(url=url, 
                                     data=payload,
                                     timeout=3, 
                                     verify=False, 
-                                    headers={"api_key": API_KEY, "Authorization": "Bearer" + mySecret["secret"]["url"] }).content.decode("utf-8")
+                                    headers={"api_key": API_KEY, "Authorization": "Bearer" + self.mySecret["secret"]["url"] }).content.decode("utf-8")
 
         except:
             pass
