@@ -23,19 +23,17 @@ case 'vendor':
 			let soundcard = "Default Audio Render Device"
 			let monitor = "Generic PnP Monitor"
 
-			listCommand.forEach((val,i) => {
-				switch (val) {
-					case '--worker-id': 
-						id = +listCommand[i + 1]
-					break
-					case '--monitor': 
-						monitor = listCommand[i + 1]
-					break
-					case '--soundcard': 
-						soundcard = listCommand[i + 1]
-					break
-				}
-			})
+			listCommand.forEach((val,i) => { switch (val) {
+				case '--worker-id': 
+					id = +listCommand[i + 1]
+				break
+				case '--monitor': 
+					monitor = listCommand[i + 1]
+				break
+				case '--soundcard': 
+					soundcard = listCommand[i + 1]
+				break
+			}})
 
 			return {
 				worker_id: id,
@@ -43,21 +41,17 @@ case 'vendor':
 				monitor_name: monitor,
 			}
 		})())
-		.then((data) => {
-			console.log(stringify(data))
-		})
+
 		break; 
 	case 'deactivate-session': 
 		task = sdk.DeactivateSession(((): number => {
 			let id = -1
 
-			listCommand.forEach((val,i) => {
-				switch (val) {
-					case '--session-id': 
-						id = +listCommand[i + 1]
-					break
-				}
-			})
+			listCommand.forEach((val,i) => { switch (val) {
+				case '--session-id': 
+					id = +listCommand[i + 1]
+				break
+			}})
 
 			return id
 		})())
