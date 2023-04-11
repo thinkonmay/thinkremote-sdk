@@ -1,5 +1,5 @@
 {
-	"name": "sdk",
+	"name": "thinkremote-sdk",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
@@ -7,6 +7,7 @@
 		"@types/node": "^18.15.11"
 	},
 	"scripts": {
+    	"build": "tsc --module commonjs",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "npx ts-node cmd/index.ts"
 	},

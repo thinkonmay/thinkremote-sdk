@@ -2,15 +2,15 @@
 import * as dotenv from 'dotenv';
 import { parse, stringify } from 'yaml'
 
-import {SdkFunction} from '../src/sdk';
-import { Filter } from '../src/model';
+import {SdkFunction} from '../dist/sdk';
+import { Filter } from '../dist/model';
 dotenv.config()
 
 const sdk = new SdkFunction()
 
 const listCommand = process.argv
 
-let task : Promise<any> = undefined
+let task : Promise<any> = (async () => {return "no task ran"})()
 listCommand.forEach((val, index) => { switch (val) {
 case 'vendor': 
 	listCommand.forEach((val,index) => { switch(val) {
