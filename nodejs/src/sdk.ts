@@ -2,7 +2,7 @@ import axios from 'axios';
 import { FetchOption, FetchResponse, Filter, Secret } from './model';
 
 const ANON_KEY = process.env.ANON_KEY ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwYWdxd2dyenF4b3lkZXpneGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODExODI5OTIsImV4cCI6MTk5Njc1ODk5Mn0.GAqX45RRsQ8TIoBokIbtgODXjbB3LU_yX9Nkihz_f68"
-const PROJECT  = process.env.PROJECT  ?? "avmvymkexjarplbxwlnj"
+const PROJECT  = process.env.PROJECT  ?? "zpagqwgrzqxoydezgxkh"
 const API_KEY  = process.env.API_KEY
 
 
