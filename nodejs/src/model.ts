@@ -88,9 +88,17 @@ export interface Secret {
     }
 }
 
+export type FetchOption = {
+	wait_for : {
+		worker : {
+			public_ip  : string
+			private_ip : string
+		}
+	}
+}
+
 
 export interface FetchResponse {
     active: WorkerProfile[]
-    unactive: WorkerProfile[]
 }
 

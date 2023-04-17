@@ -15,7 +15,7 @@ listCommand.forEach((val, index) => { switch (val) {
 case 'vendor': 
 	listCommand.forEach((val,index) => { switch(val) {
 	case 'list-workers': 
-		task = sdk.fetchWorker()
+		task = sdk.FetchWorker()
 		break; 
 	case 'create-session': 
 		task = sdk.CreateSession(((): Filter => {

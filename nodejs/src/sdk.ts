@@ -1,41 +1,23 @@
-import axios, { AxiosResponse } from 'axios';
-import { FetchResponse, Filter, Secret, WorkerProfile } from './model';
+import axios from 'axios';
+import { FetchOption, FetchResponse, Filter, Secret } from './model';
 
-const PROJECT = process.env.PROJECT ?? "avmvymkexjarplbxwlnj"
-const API_KEY = process.env.API_KEY
+const ANON_KEY = process.env.ANON_KEY ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwYWdxd2dyenF4b3lkZXpneGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODExODI5OTIsImV4cCI6MTk5Njc1ODk5Mn0.GAqX45RRsQ8TIoBokIbtgODXjbB3LU_yX9Nkihz_f68"
+const PROJECT  = process.env.PROJECT  ?? "avmvymkexjarplbxwlnj"
+const API_KEY  = process.env.API_KEY
+
+
+
 
 
 export class SdkFunction {
-	secret: Secret | null;
-
-	constructor() {
-		this.secret = null
-	}
-
-	async fetchSecret() {
-		if (this.secret != null) {
-			return
-		}
-
-		const res = await axios<Secret>(`https://${PROJECT}.functions.supabase.co/constant`, {
-			method: "POST",
-			data: JSON.stringify({}) as string
-		})
-
-		this.secret = res.data 
-		console.log(`updated secret for project ${PROJECT}`)
-	}
-
-	async fetchWorker(): Promise<FetchResponse | Error> {
-		await this.fetchSecret()
-
-		const url = this.secret.edge_functions.worker_profile_fetch
+	public async FetchWorker(option?: FetchOption): Promise<FetchResponse | Error> {
+		const url = `https://${PROJECT}.functions.supabase.co/worker_profile_fetch`
 		const res = await axios<any>(url, {
 			method: "POST",
-			data: {only_active:false},
+			data: option ? {...option, use_case : 'cli' } : { use_case : 'cli' },
 			headers: {
 				'api_key': API_KEY,
-				'Authorization': `Bearer ${this.secret.secret.anon}`
+				'Authorization': `Bearer ${ANON_KEY}`
 			}
 		})
 		if (res.status != 200) {
@@ -45,20 +27,17 @@ export class SdkFunction {
 		return res.data
 	}
 
-	async CreateSession(filter: Filter): Promise<{
+	public async CreateSession(filter: Filter): Promise<{
 		session_id : number
 		url        : string
 	} | Error> {
-		await this.fetchSecret()
-
-		const url = this.secret.edge_functions.worker_session_create
-		const res = await axios<any>({
-			url,
+		const url = `https://${PROJECT}.functions.supabase.co/worker_session_create`
+		const res = await axios<any>( url, {
 			method: "POST",
 			data: filter,
 			headers: {
 				'api_key': API_KEY,
-				'Authorization': `Bearer ${this.secret.secret.anon}`
+				'Authorization': `Bearer ${ANON_KEY}`
 			}
 		})
 		if (res.status != 200) {
@@ -68,19 +47,16 @@ export class SdkFunction {
 		return res.data 
 	}
 
-	async DeactivateSession(sessionId: number) : Promise<string | Error>{
-		await this.fetchSecret()
-
-		const body = { worker_session_id: sessionId }
-
-		const url = this.secret.edge_functions.worker_session_deactivate
-		const res = await axios({
-			url,
+	public async DeactivateSession(sessionId: number) : Promise<string | Error>{
+		const url = `https://${PROJECT}.functions.supabase.co/worker_session_deactivate`
+		const res = await axios( url, {
             method: "POST",
-			data: body,
+			data: { 
+				worker_session_id: sessionId 
+			},
 			headers: {
 				'api_key': API_KEY,
-				'Authorization': `Bearer ${this.secret.secret.anon}`
+				'Authorization': `Bearer ${ANON_KEY}`
 			}
 		})
 
