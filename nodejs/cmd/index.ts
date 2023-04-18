@@ -16,6 +16,14 @@ case 'vendor':
 	listCommand.forEach((val,index) => { switch(val) {
 	case 'list-workers': 
 		task = sdk.FetchWorker()
+		// task = sdk.FetchWorker({
+		// 	wait_for: {
+		// 		worker: {
+		// 			public_ip  : "116.110.40.203",
+		// 			private_ip : "192.168.2.7"
+		// 		}
+		// 	}
+		// })
 		break; 
 	case 'create-session': 
 		task = sdk.CreateSession(((): Filter => {

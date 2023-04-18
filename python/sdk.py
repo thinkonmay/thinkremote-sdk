@@ -50,7 +50,7 @@ class SdkFunction:
         self.ANON_KEY = os.getenv("ANON_KEY")
         
 
-    FetchOption = {
+    WaitOption = {
         "wait_for" : {
             "worker" : {
                 "public_ip" : str,
@@ -59,17 +59,19 @@ class SdkFunction:
         }
     }
 
-    def FetchWorker(self, option: FetchOption):
+    def FetchWorker(self, option: WaitOption):
         url = "https://" +self.PROJECT + ".functions.supabase.co/worker_profile_fetch"
 
         body = { "use_case" : "cli" }
+        timeout = 3
 
         if(option != None):
             body["wait_for"] = option["wait_for"]
+            timeout = 3 * 60
 
         response = requests.post(url=url, 
-            data=json.dumps(option),
-            timeout=3, 
+            data=json.dumps(body),
+            timeout=timeout, 
             verify=True, 
             headers={
                 "api_key":self.API_KEY, 

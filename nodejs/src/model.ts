@@ -98,7 +98,9 @@ export type FetchOption = {
 }
 
 
-export interface FetchResponse {
+export type FetchResponse = {
     active: WorkerProfile[]
+} | {
+    target: WorkerProfile
 }
 
