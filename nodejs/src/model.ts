@@ -7,12 +7,6 @@ export interface WorkerProfile {
     match_sessions: {
         id: number
         worker_profile_id: number
-        manifest: {
-            fail_count: number
-            hid_port: number
-            hid_process_id: number
-            hub_process_id: number
-        }
         signaling_config: {
             HostName: string
             SignalingPort: number
@@ -21,6 +15,13 @@ export interface WorkerProfile {
         webrtc_config:{
             iceServers: any
         }
+
+        user_session : {
+            user_session_id : number
+            user_email : string
+            last_check : string
+            start_at : string
+        }[]
     }[]
 
     hardware: {
@@ -61,31 +62,6 @@ export interface Filter {
 	worker_id: number
 	monitor_name: string
 	soudcard_name: string
-}
-
-export interface Secret {
-    edge_functions: {
-        user_keygen: string
-        proxy_register: string
-        session_authenticate: string
-        signaling_authenticate: string
-        turn_register: string
-        worker_profile_fetch: string
-        worker_register: string
-        worker_session_create: string
-        worker_session_deactivate: string
-    }
-    secret: {
-        anon: string
-        url: string
-    }
-    google: {
-        client_id: string
-    }
-    conductor: {
-        host: string
-        grpc_port: number
-    }
 }
 
 export type FetchOption = {
