@@ -15,30 +15,22 @@ def main():
         sdk = SdkFunction()
         for idx, item in enumerate(listCommand):
             if item == "list-workers": 
-                # data = sdk.FetchWorker(option=None) # if you want to fetch all active worker
-                data = sdk.FetchWorker(option={   # if you want to fetch a specific worker
-                    "wait_for" : {
-                        "worker" : {
-                            "public_ip" : "116.110.40.203",
-                            "private_ip" : "192.168.2.7"
-                        }
-                    }
-                })
+                data = sdk.FetchWorker(option=None) # if you want to fetch all active worker
+                # data = sdk.FetchWorker(option={   # if you want to fetch a specific worker
+                #     "wait_for" : {
+                #         "worker" : {
+                #             "public_ip" : "116.110.40.203",
+                #             "private_ip" : "192.168.2.7"
+                #         }
+                #     }
+                # })
                 print(yaml.dump(data))
             elif item == "create-session":
-                id = -1
-                soundcard = "Default Audio Render Device"
-                monitor = "Generic PnP Monitor"
-                if (listCommand[idx + 1] == "--worker-id"):
-                    id = listCommand[idx + 2]
-                elif listCommand[idx+1] == "--monitor":
-                    monitor = listCommand[idx + 2]
-                elif listCommand[idx+1] == "--soundcard":
-                    soundcard = listCommand[idx + 2]
-
+                id = None
                 resp = sdk.CreateSession({ "worker_id" : id,
-                                  "sound_name" : soundcard, 
-                                  "monitor_name" : monitor})
+                                            "public_ip": "103.182.163.13",
+                                            "private_ip": "192.168.1.116",
+                                            "reference_email": "hoangdeptrai@gmail.com" })
                 print(yaml.dump(resp))
             elif item == "deactivate-session":
                 

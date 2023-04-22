@@ -28,7 +28,7 @@ class SdkFunction:
         url = "https://" +self.PROJECT + ".functions.supabase.co/worker_profile_fetch"
 
         body = { "use_case" : "cli" }
-        timeout = 3
+        timeout = 3 * 10
 
         if(option != None):
             body["wait_for"] = option["wait_for"]
@@ -51,16 +51,34 @@ class SdkFunction:
 
     Filter = {
         "worker_id": int,
+
+        "private_ip": str,
+        "public_ip": str,
+
+        "reference_email": int,
+
         "monitor_name": str,
         "sound_name": str
     }
 
     def CreateSession(self, filter: Filter):
+        body = {}
+        if filter["worker_id"] != None:
+            body["worker_id"] = filter["worker_id"]
+        elif filter["private_ip"] != None and filter["public_ip"] != None:
+            body["public_ip"] = filter["public_ip"]
+            body["private_ip"] = filter["private_ip"]
+        else:
+            raise Exception("worker_ip or worker_id field is required")
+        
+        if filter["reference_email"] != None:
+            body["reference_email"] = filter["reference_email"]
+
 
         url = "https://" +self.PROJECT + ".functions.supabase.co/worker_session_create"
         response = requests.post(url=url, 
-            data=json.dumps(filter),
-            timeout=3, 
+            data=json.dumps(body),
+            timeout=60, 
             verify=True, 
             headers={
                 "api_key":self.API_KEY, 
@@ -80,7 +98,7 @@ class SdkFunction:
         url = "https://" +self.PROJECT + ".functions.supabase.co/worker_session_deactivate"
         response = requests.post(url=url, 
             data=json.dumps({ "worker_session_id": session_id }),
-            timeout=3, 
+            timeout=60, 
             verify=True, 
             headers={
                 "api_key":self.API_KEY, 
