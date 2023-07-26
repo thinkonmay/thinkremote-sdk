@@ -1,6 +1,8 @@
 import json
 import requests
-import os 
+import os
+
+from generated import Welcome6, welcome6_from_dict
 
 class SdkFunction:
     def __init__(self):
@@ -45,9 +47,8 @@ class SdkFunction:
 
         if (response.status_code != 200):
             return "failed : " + response.content.decode()
-
-        response = json.loads(response.text)
-        return response
+        data = welcome6_from_dict(json.loads(response.text))
+        return data
 
     Filter = {
         "worker_id": int,
