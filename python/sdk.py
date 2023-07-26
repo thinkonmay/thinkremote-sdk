@@ -27,7 +27,7 @@ class SdkFunction:
     def FetchWorker(self, option: WaitOption):
         url = "https://" +self.PROJECT + ".functions.supabase.co/worker_profile_fetch"
 
-        body = { "use_case" : "cli" }
+        body = { "use_case" : "sdk" }
         timeout = 3 * 10
 
         if(option != None):

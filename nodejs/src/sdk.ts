@@ -14,7 +14,7 @@ export class SdkFunction {
 		const url = `https://${PROJECT}.functions.supabase.co/worker_profile_fetch`
 		const res = await axios<any>(url, {
 			method: "POST",
-			data: option ? {...option, use_case : 'cli' } : { use_case : 'cli' },
+			data: option ? {...option, use_case : 'sdk' } : { use_case : 'sdk' },
 			headers: {
 				'api_key': API_KEY,
 				'Authorization': `Bearer ${ANON_KEY}`
