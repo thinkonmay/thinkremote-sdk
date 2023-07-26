@@ -1,20 +1,37 @@
 export interface WorkerProfile {
-    id: 18
-    account_id: string
-    inserted_at: string
-    last_check: string
-
+    proxy_profile_id: number
+    worker_profile_id: number
     match_sessions: {
-        id: number
+        session_id: number
+
+        worker_session_id: number
         worker_profile_id: number
-        signaling_config: {
-            HostName: string
-            SignalingPort: number
-            WebsocketURL: string
-        }
+        account_session_id:  string
         webrtc_config:{
             iceServers: any
         }
+        signaling_config: {
+            Data: any
+            Audio: any
+            Video: any
+            HostName: string
+            ValidationUrl: number
+        }
+
+        media_config: {
+            monitor: any
+            soundcard: any
+        }
+
+        auth_config: {
+            token: string
+        }
+
+        start_at: string
+        last_check: string
+        metadata: any
+        url: string
+        
 
         user_session : {
             user_session_id : number
@@ -24,6 +41,8 @@ export interface WorkerProfile {
         }[]
     }[]
 
+    inserted_at: string
+    last_check: string
     hardware: {
         BIOS       : string
         CPU        : string
@@ -35,7 +54,9 @@ export interface WorkerProfile {
         PublicIP   : string
         RAM        : string
         timestamp  : string
+        partitions : string[]
     }
+   
     media_device: {
         monitors: {
               Adapter: string
@@ -49,13 +70,22 @@ export interface WorkerProfile {
         }[],
         soundcards: {
             Api: string
-            DeviceID: string
             Name: string
-            IsDefault: boolean
-            IsLoopback: boolean
+            DeviceID: string
+            pipeline: {
+                Plugin: string
+                PipelineHash: string
+                PipelineString: string
+            }
         }[]
-        timestamp: string
     }
+
+
+ 
+    metadata: {}
+    public_ip: string
+    private: string
+    
 }
 
 export interface Filter {
