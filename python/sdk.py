@@ -1,6 +1,8 @@
 import json
 import requests
-import os 
+import os
+
+from generated import Welcome6, welcome6_from_dict
 
 class SdkFunction:
     def __init__(self):
@@ -27,7 +29,7 @@ class SdkFunction:
     def FetchWorker(self, option: WaitOption):
         url = "https://" +self.PROJECT + ".functions.supabase.co/worker_profile_fetch"
 
-        body = { "use_case" : "cli" }
+        body = { "use_case" : "sdk" }
         timeout = 3 * 10
 
         if(option != None):
@@ -45,9 +47,8 @@ class SdkFunction:
 
         if (response.status_code != 200):
             return "failed : " + response.content.decode()
-
-        response = json.loads(response.text)
-        return response
+        data = welcome6_from_dict(json.loads(response.text))
+        return data
 
     Filter = {
         "worker_id": int,
