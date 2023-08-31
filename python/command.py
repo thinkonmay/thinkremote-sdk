@@ -16,22 +16,17 @@ def main():
         for idx, item in enumerate(listCommand):
             if item == "list-workers": 
                 data = sdk.FetchWorker(option=None) # if you want to fetch all active worker
-                # data = sdk.FetchWorker(option={   # if you want to fetch a specific worker
-                #     "wait_for" : {
-                #         "worker" : {
-                #             "public_ip" : "116.110.40.203",
-                #             "private_ip" : "192.168.2.7"
-                #         }
-                #     }
-                # })
                 print(yaml.dump(data))
             elif item == "create-session":
                 id = None
                 resp = sdk.CreateSession({ "worker_id" : id,
                                             "public_ip": "103.182.163.13",
                                             "private_ip": "192.168.1.116",
-                                            "reference_email": "hoangdeptrai@gmail.com" })
+                                            "reference_email": "test@gmail.com" })
                 print(yaml.dump(resp))
+            elif item == "analytic":
+                resp = sdk.FetchAnalytic()
+
             elif item == "deactivate-session":
                 
                 id = -1
