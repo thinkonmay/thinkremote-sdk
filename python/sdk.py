@@ -1,14 +1,17 @@
 import json
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from generated import Welcome6, welcome6_from_dict
 
 class SdkFunction:
     def __init__(self):
-        self.PROJECT  = os.environ.get("PROJECT")
-        self.API_KEY  = os.environ.get("API_KEY")
-        self.ANON_KEY = os.environ.get("ANON_KEY")
+        self.PROJECT  = os.getenv("PROJECT")
+        self.API_KEY  = os.getenv("API_KEY")
+        self.ANON_KEY = os.getenv("ANON_KEY")
         
         if self.PROJECT == None:
             self.PROJECT = "joijwboqwnujvyxudqez"
@@ -114,17 +117,20 @@ class SdkFunction:
     
 
     def FetchAnalytic(self):
-        url = "http://" + self.PROJECT + ".functions.supabase.co/analytics"
+        url = "https://"+ self.PROJECT + ".supabase.co/functions/v1/analytics"
         response = requests.post(url=url, 
+            data=json.dumps({}),
             timeout=60, 
             verify=True, 
             headers={
-                "api_key":self.API_KEY, 
+                "Content-Type":"application/json",
                 "Authorization": "Bearer " + self.ANON_KEY
             })
         
+
         if (response.status_code != 200):
             return "failed : " + response.content.decode()
         
         response = json.loads(response.text)
+        print(response)
         return response

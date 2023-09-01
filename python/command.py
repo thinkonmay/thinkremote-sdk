@@ -24,9 +24,6 @@ def main():
                                             "private_ip": "192.168.1.116",
                                             "reference_email": "test@gmail.com" })
                 print(yaml.dump(resp))
-            elif item == "analytic":
-                resp = sdk.FetchAnalytic()
-
             elif item == "deactivate-session":
                 
                 id = -1
@@ -35,6 +32,10 @@ def main():
                         id = int(listCommand[idx + 2])
                 if id != -1:
                     sdk.DeactiveSession(id)
+            elif item == "analytic":
+                resp = sdk.FetchAnalytic()
+                
+                print(yaml.dump(resp))
     elif listCommand[1] == "--help":
         printHelp()
 
