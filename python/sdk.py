@@ -1,6 +1,9 @@
 import json
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from generated import Welcome6, welcome6_from_dict
 
@@ -11,9 +14,9 @@ class SdkFunction:
         self.ANON_KEY = os.getenv("ANON_KEY")
         
         if self.PROJECT == None:
-            self.PROJECT = "avmvymkexjarplbxwlnj"
+            self.PROJECT = "joijwboqwnujvyxudqez"
         if self.ANON_KEY == None:
-            self.ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2bXZ5bWtleGphcnBsYnh3bG5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODAzMjM0NjgsImV4cCI6MTk5NTg5OTQ2OH0.y2W9svI_4O4_xd5AQk4S4MLJAvQJIp0QrO4cljLB9Ik"
+            self.ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvaWp3Ym9xd251anZ5eHVkcWV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODc3NjM1NDQsImV4cCI6MjAwMzMzOTU0NH0.n3hiSx2r5UbRy0F0TDacrAqx1bsqVETwiJzhZNMhzM0"
         if self.API_KEY == None:
             raise Exception("None apikey provided")
 
@@ -47,8 +50,8 @@ class SdkFunction:
 
         if (response.status_code != 200):
             return "failed : " + response.content.decode()
-        data = welcome6_from_dict(json.loads(response.text))
-        return data
+        # data = welcome6_from_dict(json.loads(response.text))
+        return json.loads(response.text)
 
     Filter = {
         "worker_id": int,
@@ -110,4 +113,24 @@ class SdkFunction:
             return "failed : " + response.content.decode()
 
         response = json.loads(response.text)
+        return response
+    
+
+    def FetchAnalytic(self):
+        url = "https://"+ self.PROJECT + ".functions.supabase.co/analytics"
+        response = requests.post(url=url, 
+            data=json.dumps({}),
+            timeout=60, 
+            verify=True, 
+            headers={
+                "api_key": self.API_KEY, 
+                "Authorization": "Bearer " + self.ANON_KEY
+            })
+        
+
+        if (response.status_code != 200):
+            return "failed : " + response.content.decode()
+        
+        response = json.loads(response.text)
+        print(response)
         return response

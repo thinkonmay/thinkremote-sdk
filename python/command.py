@@ -30,7 +30,7 @@ def main():
                 resp = sdk.CreateSession({ "worker_id" : id,
                                             "public_ip": "103.182.163.13",
                                             "private_ip": "192.168.1.116",
-                                            "reference_email": "hoangdeptrai@gmail.com" })
+                                            "reference_email": "test@gmail.com" })
                 print(yaml.dump(resp))
             elif item == "deactivate-session":
                 
@@ -40,6 +40,10 @@ def main():
                         id = int(listCommand[idx + 2])
                 if id != -1:
                     sdk.DeactiveSession(id)
+            elif item == "analytic":
+                resp = sdk.FetchAnalytic()
+                
+                print(yaml.dump(resp))
     elif listCommand[1] == "--help":
         printHelp()
 
