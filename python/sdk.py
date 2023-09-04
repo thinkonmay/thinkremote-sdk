@@ -132,5 +132,4 @@ class SdkFunction:
             return "failed : " + response.content.decode()
         
         response = json.loads(response.text)
-        print(response)
         return response
