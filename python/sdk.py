@@ -117,13 +117,13 @@ class SdkFunction:
     
 
     def FetchAnalytic(self):
-        url = "https://"+ self.PROJECT + ".supabase.co/functions/v1/analytics"
+        url = "https://"+ self.PROJECT + ".functions.supabase.co/analytics"
         response = requests.post(url=url, 
             data=json.dumps({}),
             timeout=60, 
             verify=True, 
             headers={
-                "Content-Type":"application/json",
+                "api_key": self.API_KEY, 
                 "Authorization": "Bearer " + self.ANON_KEY
             })
         
