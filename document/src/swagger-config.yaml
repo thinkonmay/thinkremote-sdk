@@ -1,11 +1,24 @@
 openapi: "3.0.0"
 info:
   version: "0.0.1"
-  title: "Swagger UI Webpack Setup"
-  description: "Demonstrates Swagger UI with Webpack including CSS and OAuth"
+  title: "Thinkmay SDK"
+  description: |-
+    Thinkmay is simplify Cloud-PC. Unlock the power of your Cloud-PC from anywhere, anytime, and any devices
+
+    Here is our API. To make it easy to use our main service: 
+    - list all worker status 
+    - create worker remote session
+    - deactivate worker remote session
+    - show analytics worker session and remote session
+    
+    Some useful links:
+    - [What is Thinkmay?](https://www.notion.so/thinkonmay/What-is-Thinkmay-57ef5071a5cc4d638584877f42957c34)
+  contact:
+    email: huyhoangdo@contact.thinkmay.net
+
 servers:
-  - url: "https://demo.identityserver.io/api"
-    description: "Identity Server test API"
+  - url: "https://supabase.thinkmay.net"
+    description: "Identity Server API"
 components:
   securitySchemes:
     # See https://demo.identityserver.io/ for configuration details.
@@ -20,11 +33,88 @@ security:
   - identity_server_auth:
     - api
 paths:
-  /test:
-    get:
-      summary: "Runs a test request against the Identity Server demo API"
+  /worker_profile_fetch:
+    post:
+      tags:
+        - worker_profile_fetch
+      summary: Fetch All Worker Status
+      description: Get all status info of worker from your side.
+      operationId: worker_profile_fetch
+      requestBody: 
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
       responses:
-        401:
-          description: "Unauthorized"
-        200:
-          description: "OK"
+        '200':
+          description: successful operation
+          content:
+            application/json:
+                schema:
+                  # $ref: 'test.yaml'
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+        '400':
+          description: Invalid status value
+  /worker_session_create:
+    post:
+      tags: 
+        - worker_session_create
+      summary: Create the remote session to worker
+      description: You can use public, private ip or worker_ip to look up the worker for start remote session
+      operationId: worker_session_create
+      requestBody: 
+      responses: 
+        '200': 
+          description: succesful operation
+          content: 
+            application/json:
+              schema:
+                properties:
+                  id: 
+                    type: interger
+                  username: 
+                    type: string
+  /worker_session_deactivate:
+    post:
+      tags:
+        - worker_session_deactivate
+      summary: Deactive the remote session with session id
+      description: 
+      operationId: worker_session_deactivate
+      requestBody:
+      responses: 
+        '200': 
+          description: succesful operation
+          content: 
+            application/json:
+              schema:
+                properties:
+                  id: 
+                    type: interger
+                  username: 
+                    type: string
+  /analytics:
+    post: 
+      tags: 
+        - analytics
+      summary: The analytics method to get the logging, number of session is created, number of hours being played, etc.. from your side
+      description:
+      operationId: analytics
+      requestBody:
+    responses:
+      '200':
+        description: successful operation
+        content:
+          application/json:
+            schema:
+                properties:
+                  id: 
+                    type: interger
+                  username: 
+                    type: string
