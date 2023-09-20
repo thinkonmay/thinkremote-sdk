@@ -14,9 +14,9 @@ class SdkFunction:
         self.ANON_KEY = os.getenv("ANON_KEY")
         
         if self.PROJECT == None:
-            self.PROJECT = "joijwboqwnujvyxudqez"
+            self.PROJECT = "https://supabase.thinkmay.net"
         if self.ANON_KEY == None:
-            self.ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvaWp3Ym9xd251anZ5eHVkcWV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODc3NjM1NDQsImV4cCI6MjAwMzMzOTU0NH0.n3hiSx2r5UbRy0F0TDacrAqx1bsqVETwiJzhZNMhzM0"
+            self.ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNjk0MDE5NjAwLAogICJleHAiOiAxODUxODcyNDAwCn0.EpUhNso-BMFvAJLjYbomIddyFfN--u-zCf0Swj9Ac6E"
         if self.API_KEY == None:
             raise Exception("None apikey provided")
 
@@ -30,7 +30,7 @@ class SdkFunction:
     }
 
     def FetchWorker(self, option: WaitOption):
-        url = "https://" +self.PROJECT + ".functions.supabase.co/worker_profile_fetch"
+        url = self.PROJECT + "/worker_profile_fetch"
 
         body = { "use_case" : "sdk" }
         timeout = 3 * 10
@@ -79,7 +79,7 @@ class SdkFunction:
             body["reference_email"] = filter["reference_email"]
 
 
-        url = "https://" +self.PROJECT + ".functions.supabase.co/worker_session_create"
+        url = self.PROJECT + "/worker_session_create"
         response = requests.post(url=url, 
             data=json.dumps(body),
             timeout=60, 
@@ -99,7 +99,7 @@ class SdkFunction:
 
     def DeactiveSession(self, session_id: str):
 
-        url = "https://" +self.PROJECT + ".functions.supabase.co/worker_session_deactivate"
+        url = self.PROJECT + "/worker_session_deactivate"
         response = requests.post(url=url, 
             data=json.dumps({ "worker_session_id": session_id }),
             timeout=60, 
@@ -117,7 +117,7 @@ class SdkFunction:
     
 
     def FetchAnalytic(self):
-        url = "https://"+ self.PROJECT + ".functions.supabase.co/analytics"
+        url =  self.PROJECT + "/analytics"
         response = requests.post(url=url, 
             data=json.dumps({}),
             timeout=60, 
