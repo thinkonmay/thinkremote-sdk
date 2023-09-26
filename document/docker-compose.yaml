@@ -1,0 +1,12 @@
+version: "3.1"
+
+services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    hostname: swagger-ui
+    ports:
+      - "8085:8080"
+    volumes:
+      - /home/epitchi/Documents/thinkmay/thinkshare-v2/thinkremote-sdk/document/src/swagger-config.yaml:/usr/share/nginx/html/swagger.yaml
+    environment:
+      - SWAGGER_JSON=/home/epitchi/Documents/thinkmay/thinkshare-v2/thinkremote-sdk/document/src/swagger-config.yaml
