@@ -19,6 +19,13 @@ class SdkFunction:
             self.ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNjk0MDE5NjAwLAogICJleHAiOiAxODUxODcyNDAwCn0.EpUhNso-BMFvAJLjYbomIddyFfN--u-zCf0Swj9Ac6E"
         if self.API_KEY == None:
             raise Exception("None apikey provided")
+        
+        if self.PROJECT == "https://supabase.thinkmay.net":
+            self.PROJECT = "https://supabase.thinkmay.net/functions/v1"
+        
+        # NOTICE: The Supabase Selfhost have different url to call API, it need to add "/functions/v1" before function name
+        # Supabase Cloud: https://fkymwagaibfzyfrzcizz.functions.supabase.co/worker_profile_fetch
+        # Supabase Selfhost: https://supabase.thinkmay.net/functions/v1/worker_profile_fetch
 
     WaitOption = {
         "wait_for" : {
